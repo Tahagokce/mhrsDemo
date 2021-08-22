@@ -1,0 +1,7 @@
+package com.mhrs.mhrsdemo.dataAccess.abstracts;
+
+import com.mhrs.mhrsdemo.entities.concretes.JobPosition;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface JopPositionDao extends JpaRepository<JobPosition,Integer> {
+}
