@@ -4,22 +4,20 @@ import com.mhrs.mhrsdemo.business.abstracts.JobPositionService;
 import com.mhrs.mhrsdemo.core.utilities.results.*;
 import com.mhrs.mhrsdemo.dataAccess.abstracts.JopPositionDao;
 import com.mhrs.mhrsdemo.entities.concretes.JobPosition;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class JobPositionsManager implements JobPositionService {
+@RequiredArgsConstructor
+public class    JobPositionsManager implements JobPositionService {
 
-    private JopPositionDao jopPositionDao ;
+    private final JopPositionDao jopPositionDao ;
 
 
-    @Autowired
-    public JobPositionsManager(JopPositionDao jopPositionDao) {
-        super();
-        this.jopPositionDao = jopPositionDao;
-    }
+
 
     @Override
     public DataResult<List<JobPosition>> getAll() {
@@ -31,7 +29,7 @@ public class JobPositionsManager implements JobPositionService {
     }
 
     @Override
-    public Result add(JobPosition jobPosition) {
+    public Result save(JobPosition jobPosition) {
 
         this.jopPositionDao.save(jobPosition);
 

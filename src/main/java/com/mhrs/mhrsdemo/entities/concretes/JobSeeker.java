@@ -13,11 +13,10 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class JobSeeker {
+public class JobSeeker  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private int id  ;
 
 
@@ -25,6 +24,8 @@ public class JobSeeker {
 
     @Column(name = "user_id")
     private int userId ;
+
+    private int roleId;
 
 
 }

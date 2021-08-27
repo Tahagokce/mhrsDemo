@@ -7,15 +7,17 @@ import com.mhrs.mhrsdemo.entities.dto.UserLoginDto;
 
 public interface UserService  {
 
-     DataResult<User> findByUserName(String userName);
+     DataResult<User> getByEmail(String email);
 
      DataResult<User> findByNameAndPassword(String email,String password);
 
-     Result add(User user);
+     Result save(User user);
 
-     Result delete();
+     DataResult<User> getById(int id);
 
-     Result update();
+     Result delete(User user);
+
+     Result update(User user);
 
 
 }

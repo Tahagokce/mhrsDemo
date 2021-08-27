@@ -6,7 +6,7 @@ package com.mhrs.mhrsdemo.api.controllers;
 import com.mhrs.mhrsdemo.business.abstracts.JobPositionService;
 import com.mhrs.mhrsdemo.core.utilities.results.*;
 import com.mhrs.mhrsdemo.entities.concretes.JobPosition;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,18 +15,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/jopposition")
-public class JobPositionsController {
+@RequiredArgsConstructor
+public class JobPositionsController  {
 
-    private JobPositionService jopPositionService;
-
-
-
-  @Autowired
-    public JobPositionsController(JobPositionService jopPositionService ) {
-        super();
-        this.jopPositionService = jopPositionService;
-    }
-
+    private final JobPositionService jopPositionService;
 
     @GetMapping("/getall")
     public ResponseEntity<DataResult<List<JobPosition>>> GetAll (){
@@ -39,7 +31,7 @@ public class JobPositionsController {
 
     @PostMapping("/add")
      public ResponseEntity<Result> Add(@RequestBody JobPosition jobPosition){
-      this.jopPositionService.add(jobPosition);
+      this.jopPositionService.save(jobPosition);
       return ResponseEntity.ok(new SuccessResult("Başarılı"));
 
     }

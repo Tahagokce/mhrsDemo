@@ -2,18 +2,28 @@ package com.mhrs.mhrsdemo.api.controllers;
 
 
 import com.mhrs.mhrsdemo.business.abstracts.EmployerService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.mhrs.mhrsdemo.core.utilities.results.DataResult;
+import com.mhrs.mhrsdemo.entities.concretes.Employer;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/employer")
-public class EmployersController {
+@RequiredArgsConstructor
+public class EmployersController  {
 
-    private EmployerService employerService ;
+    private final EmployerService employerService ;
 
-    @Autowired
-    public EmployersController(EmployerService employerService) {
-        this.employerService = employerService;
+    @PostMapping("/add")
+    public ResponseEntity<DataResult<Employer>> add (@RequestBody Employer employer ){
+
+
+
+       var result = this.employerService.save(employer);
+
+        return ResponseEntity.ok(result);
     }
+
+
 }

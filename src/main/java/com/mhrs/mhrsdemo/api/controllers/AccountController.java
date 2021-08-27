@@ -3,48 +3,33 @@ package com.mhrs.mhrsdemo.api.controllers;
 import com.mhrs.mhrsdemo.business.abstracts.UserService;
 import com.mhrs.mhrsdemo.core.utilities.results.*;
 import com.mhrs.mhrsdemo.entities.concretes.User;
-import com.mhrs.mhrsdemo.entities.dto.UserLoginDto;
 import com.mhrs.mhrsdemo.entities.dto.UserRegisterDto;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import com.mhrs.mhrsdemo.entities.mapStruct.UserMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.Map;
 
 
 @RestController
 @RequestMapping("/account")
-public class AccountController extends BaseController {
+@RequiredArgsConstructor
+public class AccountController  {
 
-
-
-
-
-    private UserService userService;
-    private ModelMapper modelMapper;
-
-    @Autowired
-    public AccountController( UserService userService , ModelMapper modelMapper) {
-        this.userService = userService;
-
-        this.modelMapper = modelMapper;
-    }
+    private final UserService userService;
+    private final UserMapper userMapper;
 
 
     @GetMapping("/finduser")
-    public ResponseEntity<DataResult<User>> findByUserName ( @RequestBody UserLoginDto user){
+    public ResponseEntity<DataResult<User>> findByUserName ( @RequestParam String email){
 
-        return null ;
+        var result =  this.userService.getByEmail(email);
+        return ResponseEntity.ok(result) ;
     }
 
     @GetMapping("/login")
-   public ResponseEntity<DataResult<User>> findByUserNameAndPassword(  @RequestParam String email, @RequestParam String password ){
+   public ResponseEntity<DataResult<User>> findByUserNameAndPassword(   @RequestParam String email, @RequestParam String password ){
 
         var result =  this.userService.findByNameAndPassword(email, password);
         return ResponseEntity.ok(result);
@@ -52,27 +37,44 @@ public class AccountController extends BaseController {
    }
 
    @PostMapping("/register")
-   public ResponseEntity<Result> register( @RequestBody UserRegisterDto registerDto) {
+   public ResponseEntity<Result> register( @Valid @RequestBody UserRegisterDto registerDto) {
+
        if (registerDto.getPassword().equals(registerDto.getRePassword())) {
-           User user = modelMapper.map(registerDto, User.class);
-           var result = this.userService.add(user);
+           User user =  userMapper.mapUserToRegister(registerDto);
+           var result = this.userService.save(user);
            return ResponseEntity.ok(result);
        }
 
-       return ResponseEntity.ok(null);
+        return null;
+   }
+
+   @GetMapping("/getbyid")
+   public ResponseEntity<DataResult<User>> getById(@RequestParam Integer id) {
+       var result = this.userService.getById(id);
+       return ResponseEntity.ok(result);
+
+
 
    }
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorDataResult<Object> handleValidationException
-            (MethodArgumentNotValidException exceptions){
-        Map<String,String> validationErrors = new HashMap<String, String>();
-        for(FieldError fieldError : exceptions.getBindingResult().getFieldErrors()) {
-            validationErrors.put(fieldError.getField(), fieldError.getDefaultMessage());
-        }
 
-        ErrorDataResult<Object> errors
-                = new ErrorDataResult<Object>(validationErrors,"Doğrulama hataları");
-        return errors;
-    }
+    @PostMapping("/roleadd")
+    public ResponseEntity<Result> roleSave(int userId, int roleId){
+        User user= this.userService.getById(userId).getData();
+        user.setRoleId(roleId);
+        var result = this.userService.update(user);
+
+        return ResponseEntity.ok(result);
+    };
+
+
+    @PostMapping("/roledetails")
+    public ResponseEntity<Result> roleDetails(){
+
+        return null;
+    };
+
+
+
+
+
 }

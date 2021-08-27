@@ -16,7 +16,6 @@ public class Employer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
     private int id ;
 
     @Column(name = "company_name")
@@ -33,5 +32,7 @@ public class Employer {
 
     @Column(name = "user_id")
     private int userId;
+
+    private int roleId;
 
 }
